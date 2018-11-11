@@ -1,0 +1,12 @@
+{
+  "webapp": {
+    "port": 3000,
+    "prefix": "/v1/sampleapps"
+  },
+  "ruter": [
+    {
+      "prefix": "/documents",
+      "dir": "./biz_modules/documents"
+    }
+  ]
+}
