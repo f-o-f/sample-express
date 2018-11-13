@@ -1,9 +1,15 @@
+/* 
+ *
+ * エラーハンドリング
+ *
+ */
 type errorConfig = {
   name: string
   message: string
   status: number
 }
 
+// エラーはここに追加し、呼び出し時はnameだけ意識する
 const errorConfigs: errorConfig[] = [
   {
     name: 'NOT_FOUND',
@@ -26,6 +32,7 @@ export class BizError extends Error {
   }
 }
 
+// nameからエラーオブジェクトを作成する。messageを引数に保つ場合はmessageをエラーオブジェクトに設定する
 export function createError(name: string, message?: string): Error {
   const errorConfig = errorConfigs.filter((value) => {
     return value.name == name
@@ -34,6 +41,7 @@ export function createError(name: string, message?: string): Error {
   return error
 }
 
+// 定義されているエラーかどうかの判定
 export function isBizError(name: string): boolean {
   const errorConfig = errorConfigs.filter((value) => {
     return value.name == name

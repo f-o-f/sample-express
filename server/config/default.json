@@ -8,5 +8,6 @@
       "prefix": "/documents",
       "dir": "./biz_modules/documents"
     }
-  ]
+  ],
+  "dao": "json"
 }

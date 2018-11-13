@@ -16,6 +16,12 @@ app
   .use(bodyParser.json())
   .use(queryParser({ parseNull: true, parseBoolean: true }))
 
+// view の場所を指定
+app.set('views', __dirname + '../../dist')
+
+// テンプレートエンジンの指定
+app.set('view engine', 'ejs')
+
 // login moduleのルーティング
 app.use(login)
 
@@ -23,6 +29,9 @@ app.use(login)
 const ruter = express.Router()
 config.ruter.forEach((element) => {
   ruter.use(element.prefix, require(element.dir))
+  // サンプルなのでtoken検証なしだが業務処理ごとに検証を行うこと
+  // 以下のようになる想定
+  // ruter.use(element.prefix, [token検証ミドルウェア],require(element.dir))
 })
 app.use(config.webapp.prefix, ruter)
 
@@ -31,10 +40,11 @@ app.use((req, res, _next) => {
   res.status(404).end('notfound! : ' + req.path)
 })
 
-// エラーハンドリング
+// エラーハンドリング(nextに引数を渡したときに処理が移る)
 app.use((err: lib.error.BizError, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.message)
   let status = 500
+  // 業務エラー時は指定のステータスを設定
   if (lib.error.isBizError(err.name)) {
     status = err.status
   }
@@ -43,5 +53,6 @@ app.use((err: lib.error.BizError, _req: express.Request, res: express.Response, 
 
 // サーバの起動
 const server = app.listen(config.webapp.port, () => {
+  // as はキャスト
   console.log('http://localhost:' + (server.address() as net.AddressInfo).port)
 })
